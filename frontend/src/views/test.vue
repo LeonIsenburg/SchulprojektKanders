@@ -1,5 +1,6 @@
 <template>
   <div class="app-layout">
+    <div>HELLO WORLD</div>
   </div>
 </template>
 
