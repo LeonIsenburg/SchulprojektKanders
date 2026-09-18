@@ -10,6 +10,4 @@ public class Festival : BaseEntity
     
     public required string Organizer {get; set;}
 
-    /* FK   VERA_ID (kp)       INT          NOT NULL,
-            FSNM_ID (kp)       INT          NOT NULL */
 }

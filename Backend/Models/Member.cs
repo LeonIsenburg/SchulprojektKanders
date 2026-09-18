@@ -27,6 +27,4 @@ public class Member : BaseEntity
     public required string PostalCode {get; set;}
 
     public required string Location {get; set;}
-
-    //foreign key RoleID
 }
