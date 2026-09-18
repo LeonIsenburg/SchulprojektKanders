@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "react-router-dom": "^7.18.3",
     "vue-router": "^5.3.1"
   }
 }

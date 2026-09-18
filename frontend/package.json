@@ -12,11 +12,8 @@
     "format": "prettier --write --experimental-cli src/"
   },
   "dependencies": {
-<<<<<<< HEAD
     "@tailwindcss/vite": "^4.3.3",
     "tailwindcss": "^4.3.3",
-=======
->>>>>>> 873d423602e5046b2a254c9785717ad18519f187
     "vue": "^3.5.40"
   },
   "devDependencies": {
