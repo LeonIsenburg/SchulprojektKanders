@@ -1,3 +1,7 @@
+using Backend.Models;
+
+namespace Backend.Models.Member;
+
 public class Member : BaseEntity
 {
     public required int MemberID {get; set;}
@@ -27,4 +31,6 @@ public class Member : BaseEntity
     public required string PostalCode {get; set;}
 
     public required string Location {get; set;}
+
+    public required Role Role {get; set;}
 }

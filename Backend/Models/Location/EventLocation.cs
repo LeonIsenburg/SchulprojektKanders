@@ -1,3 +1,7 @@
+using Backend.Models;
+
+namespace Backend.Models.Location;
+
 public class EventLocation : BaseEntity
 {
     public required int Event_LocationID {get; set;}

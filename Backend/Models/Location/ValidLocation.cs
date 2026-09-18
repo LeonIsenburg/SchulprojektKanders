@@ -1,3 +1,7 @@
+using Backend.Models;
+
+namespace Backend.Models.Location;
+
 public class ValidLocation : BaseEntity
 {
     public required int ValidLocationID {get; set;}

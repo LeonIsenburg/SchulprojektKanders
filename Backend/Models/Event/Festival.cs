@@ -1,3 +1,7 @@
+using Backend.Models;
+
+namespace Backend.Models.Event;
+
 public class Festival : BaseEntity
 {
     public required int FestivalID {get; set;}
@@ -7,7 +11,6 @@ public class Festival : BaseEntity
     public required TimeOnly EndTime {get; set;}
 
     public required string EndDay {get; set;}
-    
-    public required string Organizer {get; set;}
 
+    public required string Organizer {get; set;}
 }

@@ -1,3 +1,7 @@
+using Backend.Models;
+
+namespace Backend.Models.Music;
+
 public class Musician : BaseEntity
 {
     public required int MusicianID {get; set;}
