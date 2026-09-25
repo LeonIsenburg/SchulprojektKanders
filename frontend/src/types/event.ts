@@ -1,4 +1,6 @@
-export type EventType = 'Konzert' | 'Party' | 'Festival'
+export const EVENT_TYPES = ['Konzert', 'Party', 'Festival'] as const
+
+export type EventType = (typeof EVENT_TYPES)[number]
 
 export interface Musician {
   artistName: string | null
@@ -53,6 +55,7 @@ export interface Festival {
 }
 
 export interface EventDetail {
+  id: number
   startDate: string | null
   startTime: string | null
   entryTime: string | null
