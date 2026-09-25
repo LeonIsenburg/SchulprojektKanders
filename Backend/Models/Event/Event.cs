@@ -1,4 +1,5 @@
 using Backend.Models;
+using Backend.Models.Location;
 
 namespace Backend.Models.Event;
 
@@ -22,6 +23,13 @@ public class Event : BaseEntity
 
     public required Status Status {get; set;}
 
-    /* FK   MITG_ID         INT          NOT NULL,
-            GORT_ID         INT          NOT NULL */
+    public required Guid MemberId {get; set;}
+    public Backend.Models.Member.Member Member {get; set;} = null!;
+
+    public required Guid ValidLocationId {get; set;}
+    public ValidLocation ValidLocation {get; set;} = null!;
+
+    public Concert? Concert {get; set;}
+    public Festival? Festival {get; set;}
+    public Party? Party {get; set;}
 }

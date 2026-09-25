@@ -1,0 +1,25 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Backend (http://localhost:5284)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build-backend",
+      "program": "${workspaceFolder}/Backend/bin/Debug/net10.0/Backend.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}/Backend",
+      "stopAtEntry": false,
+      "console": "integratedTerminal",
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "ASPNETCORE_URLS": "http://localhost:5284"
+      },
+      "serverReadyAction": {
+        "action": "openExternally",
+        "pattern": "\bNow listening on:\s+(https?://\S+)",
+        "uriFormat": "%s/api/events"
+      }
+    }
+  ]
+}

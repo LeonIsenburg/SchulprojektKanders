@@ -1,7 +1,10 @@
 using Backend.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Models.Member;
 
+[Index(nameof(Username), IsUnique = true)]
+[Index(nameof(Nickname), IsUnique = true)]
 public class Member : BaseEntity
 {
     public required int MemberID {get; set;}
@@ -33,4 +36,6 @@ public class Member : BaseEntity
     public required string Location {get; set;}
 
     public required Role Role {get; set;}
+
+    public ICollection<Backend.Models.Event.Event> OrganizedEvents {get; set;} = new List<Backend.Models.Event.Event>();
 }

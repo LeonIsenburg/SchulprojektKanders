@@ -3,6 +3,7 @@ using System;
 using Backend.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Backend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260918101222_AddNavigationProperties")]
+    partial class AddNavigationProperties
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.12");
@@ -446,27 +449,6 @@ namespace Backend.Migrations
                         .IsUnique();
 
                     b.ToTable("Member");
-
-                    b.HasData(
-                        new
-                        {
-                            Guid = new Guid("00000000-0000-0000-0000-000000000001"),
-                            Birthday = new DateOnly(2000, 1, 1),
-                            EMail = "dev@example.com",
-                            FirstName = "Test",
-                            Gender = "divers",
-                            HouseNumber = "1",
-                            LastName = "Mitglied",
-                            Location = "Teststadt",
-                            MemberID = 1,
-                            Nickname = "Dev",
-                            Password = "dev",
-                            PhoneNumber = "0000000000",
-                            PostalCode = "00000",
-                            Role = 0,
-                            Street = "Teststraße",
-                            Username = "dev"
-                        });
                 });
 
             modelBuilder.Entity("Backend.Models.Music.Band", b =>

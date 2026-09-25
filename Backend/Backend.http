@@ -1,6 +1,204 @@
 @Backend_HostAddress = http://localhost:5284
 
-GET {{Backend_HostAddress}}/weatherforecast/
+### Konzert anlegen
+# @name createConcert
+POST {{Backend_HostAddress}}/api/events
+Content-Type: application/json
+
+{
+  "startDate": "2026-11-14",
+  "startTime": "20:00",
+  "entryTime": "19:00",
+  "price": 29.9,
+  "priceType": "Vorverkauf",
+  "eventType": "Konzert",
+  "location": {
+    "postalCode": "50667",
+    "street": "Domplatz",
+    "houseNumber": "1",
+    "city": "Köln",
+    "district": "Innenstadt",
+    "region": "Köln",
+    "state": "Nordrhein-Westfalen",
+    "eventLocationName": "Live Music Hall"
+  },
+  "concert": {
+    "organizer": "Konzertbüro Köln",
+    "bands": [
+      {
+        "name": "The Testers",
+        "musicians": [
+          { "artistName": "Ricky Riff", "firstName": "Richard", "lastName": "Riffel" },
+          { "artistName": "Drumbo" }
+        ],
+        "genres": [ "Rock", "Indie" ],
+        "songs": [ "Hello World" ]
+      },
+      {
+        "name": "Side Project",
+        "musicians": [
+          { "artistName": "Drumbo" }
+        ],
+        "genres": [ "Rock" ]
+      }
+    ]
+  }
+}
+
+### Festival anlegen
+# @name createFestival
+POST {{Backend_HostAddress}}/api/events
+Content-Type: application/json
+
+{
+  "startDate": "2027-07-02",
+  "startTime": "12:00",
+  "entryTime": "10:00",
+  "price": 149,
+  "priceType": "Vorverkauf",
+  "eventType": "Festival",
+  "location": {
+    "postalCode": "53902",
+    "street": "Festivalwiese",
+    "houseNumber": "3",
+    "city": "Bad Münstereifel",
+    "district": "Euskirchen",
+    "region": "Eifel",
+    "state": "Nordrhein-Westfalen",
+    "eventLocationName": "Eifel-Gelände"
+  },
+  "festival": {
+    "endDate": "2027-07-04",
+    "endTime": "23:00",
+    "organizer": "Eifel Events",
+    "festivalName": "Eifel Open Air",
+    "bands": [
+      {
+        "band": {
+          "name": "The Testers",
+          "musicians": [ { "artistName": "Ricky Riff" } ]
+        },
+        "date": "2027-07-02",
+        "time": "18:00",
+        "day": "Freitag"
+      }
+    ]
+  }
+}
+
+### Party anlegen
+# @name createParty
+POST {{Backend_HostAddress}}/api/events
+Content-Type: application/json
+
+{
+  "startDate": "2026-12-31",
+  "startTime": "21:00",
+  "entryTime": "20:30",
+  "price": 15,
+  "priceType": "Abendkasse",
+  "eventType": "Party",
+  "location": {
+    "postalCode": "50667",
+    "street": "Domplatz",
+    "houseNumber": "1",
+    "city": "Köln",
+    "district": "Innenstadt",
+    "region": "Köln",
+    "state": "Nordrhein-Westfalen",
+    "eventLocationName": "Live Music Hall"
+  },
+  "party": {
+    "endDate": "2027-01-01",
+    "endTime": "05:00",
+    "organizer": "Nachtschicht e.V.",
+    "partyName": "Silvester Bash",
+    "bands": [
+      {
+        "name": "DJ Crew",
+        "musicians": [ { "artistName": "DJ Null" } ],
+        "genres": [ "Techno" ]
+      }
+    ]
+  }
+}
+
+### Alle Events abrufen
+GET {{Backend_HostAddress}}/api/events
 Accept: application/json
 
-###
+### Ein Event abrufen
+GET {{Backend_HostAddress}}/api/events/{{createConcert.response.body.guid}}
+Accept: application/json
+
+### Event ändern (Konzert wird zur Party)
+PUT {{Backend_HostAddress}}/api/events/{{createConcert.response.body.guid}}
+Content-Type: application/json
+
+{
+  "startDate": "2026-11-21",
+  "startTime": "22:00",
+  "entryTime": "21:00",
+  "price": 12,
+  "priceType": "Abendkasse",
+  "eventType": "Party",
+  "location": {
+    "postalCode": "50667",
+    "street": "Domplatz",
+    "houseNumber": "1",
+    "city": "Köln",
+    "district": "Innenstadt",
+    "region": "Köln",
+    "state": "Nordrhein-Westfalen",
+    "eventLocationName": "Live Music Hall"
+  },
+  "party": {
+    "endDate": "2026-11-22",
+    "endTime": "04:00",
+    "organizer": "Konzertbüro Köln",
+    "partyName": "Testers Aftershow",
+    "bands": [
+      {
+        "name": "The Testers",
+        "musicians": [ { "artistName": "Ricky Riff" } ]
+      }
+    ]
+  }
+}
+
+### Status ändern
+PATCH {{Backend_HostAddress}}/api/events/{{createConcert.response.body.guid}}/status
+Content-Type: application/json
+
+{
+  "status": "Abgesagt"
+}
+
+### Event löschen
+DELETE {{Backend_HostAddress}}/api/events/{{createConcert.response.body.guid}}
+
+### Fehlerfall: Konzert ohne Konzert-Daten (400)
+POST {{Backend_HostAddress}}/api/events
+Content-Type: application/json
+
+{
+  "startDate": "2026-11-14",
+  "startTime": "20:00",
+  "entryTime": "19:00",
+  "price": 10,
+  "priceType": "Vorverkauf",
+  "eventType": "Konzert",
+  "location": {
+    "postalCode": "50667",
+    "street": "Domplatz",
+    "houseNumber": "1",
+    "city": "Köln",
+    "district": "Innenstadt",
+    "region": "Köln",
+    "state": "Nordrhein-Westfalen",
+    "eventLocationName": "Live Music Hall"
+  }
+}
+
+### Fehlerfall: unbekannte Id (404)
+GET {{Backend_HostAddress}}/api/events/00000000-0000-0000-0000-00000000abcd
