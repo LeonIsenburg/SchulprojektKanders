@@ -26,6 +26,8 @@ pnpm-debug.log*
 # Editor / IDE
 .vscode/*
 !.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/tasks.json
 .idea/
 *.suo
 *.ntvs*
@@ -44,5 +46,8 @@ Thumbs.db
 # Testing / Coverage
 coverage/
  
+# Aspire
+aspire-output/
+
 # Sonstiges
 *.local

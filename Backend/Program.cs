@@ -6,6 +6,9 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Aspire: OpenTelemetry, Health-Checks, Service Discovery
+builder.AddServiceDefaults();
+
 // Add services to the container.
 
 builder.Services.AddControllers()
@@ -14,7 +17,7 @@ builder.Services.AddControllers()
 builder.Services.AddOpenApi();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlite(builder.Configuration.GetConnectionString("appdb")));
 
 builder.Services.AddScoped<iRequestRepository, RequestRepository>();
 
@@ -50,5 +53,7 @@ app.UseCors("Frontend");
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapDefaultEndpoints();
 
 app.Run();

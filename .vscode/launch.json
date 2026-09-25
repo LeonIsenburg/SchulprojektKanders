@@ -2,6 +2,12 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Aspire: AppHost (Backend + Frontend + DB)",
+      "type": "aspire",
+      "request": "launch",
+      "program": "${workspaceFolder}/AppHost/AppHost.csproj"
+    },
+    {
       "name": "Backend (http://localhost:5284)",
       "type": "coreclr",
       "request": "launch",

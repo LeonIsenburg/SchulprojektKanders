@@ -17,4 +17,14 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
+  server: {
+    // Aspire gibt Port und Backend-URL per Umgebungsvariable vor
+    port: process.env.PORT ? Number(process.env.PORT) : undefined,
+    proxy: {
+      '/api': {
+        target: process.env.BACKEND_URL ?? 'http://localhost:5284',
+        changeOrigin: true,
+      },
+    },
+  },
 })
