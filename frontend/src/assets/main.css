@@ -1,1 +1,35 @@
 @import 'tailwindcss';
+
+@font-face {
+  font-family: 'Anton';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./fonts/anton-400.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Barlow';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./fonts/barlow-400.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Barlow';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('./fonts/barlow-600.woff2') format('woff2');
+}
+
+@theme {
+  --color-ink: #121110;
+  --color-bone: #f3efe7;
+  --color-ash: #8b8377;
+  --color-flare: #ff3b1f;
+
+  --font-display: 'Anton', 'Arial Narrow', sans-serif;
+  --font-body: 'Barlow', system-ui, sans-serif;
+}
