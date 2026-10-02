@@ -9,7 +9,6 @@ interface EventVariant {
   endTime?: string | null
 }
 
-/** Konzert, Party oder Festival – je nachdem, welche Variante gefüllt ist. */
 export function variantOf(event: EventDetail): EventVariant | null {
   return event.festival ?? event.party ?? event.concert ?? null
 }
@@ -30,7 +29,6 @@ export function endTimeOf(event: EventDetail): string | null {
   return variantOf(event)?.endTime ?? null
 }
 
-/** Festival-/Partyname, bei Konzerten der Headliner, sonst die Location. */
 export function titleOf(event: EventDetail): string {
   return (
     event.festival?.festivalName ??
@@ -41,7 +39,6 @@ export function titleOf(event: EventDetail): string {
   )
 }
 
-/** „Nordwind · Fräulein Gold +2“ */
 export function lineupOf(event: EventDetail, max = 3): string {
   const names = bandsOf(event).map((slot) => slot.band.name)
   if (!names.length) return EMPTY
@@ -49,10 +46,6 @@ export function lineupOf(event: EventDetail, max = 3): string {
   return names.length > max ? `${shown} +${names.length - max}` : shown
 }
 
-/**
- * Unterzeile für Listen. Bei Konzerten ist der Headliner schon der Titel –
- * dann die Support-Acts („mit …“) bzw. die Besetzung statt eines doppelten Namens.
- */
 export function subtitleOf(event: EventDetail): string {
   const title = titleOf(event)
   const bands = bandsOf(event)
@@ -82,7 +75,6 @@ export function postalCityOf(event: EventDetail): string {
   return parts.length ? parts.join(' ') : EMPTY
 }
 
-/** Plakat-Datum: „10. Juli 2026“ bzw. „10.–12. Juli 2026“ bei mehrtägigen Events. */
 export function posterDate(event: EventDetail): string {
   const start = toDate(event.startDate)
   if (!start) return EMPTY
@@ -149,7 +141,6 @@ export function musicianName(musician: Musician): string {
   return musician.artistName ?? (realName || EMPTY)
 }
 
-/** Alle Genres der Acts, ohne Duplikate. */
 export function genresOf(event: EventDetail): string[] {
   return [...new Set(bandsOf(event).flatMap((slot) => slot.band.genres ?? []))]
 }
@@ -174,7 +165,6 @@ export function monthShort(value: string | null | undefined): string {
   return date ? date.toLocaleDateString('de-DE', { month: 'short' }).replace('.', '') : EMPTY
 }
 
-/** Gruppierungs-Schlüssel „2026-10“ plus Anzeigename „Oktober 2026“. */
 export function monthOf(value: string | null | undefined): { key: string; label: string } {
   const date = toDate(value)
   if (!date) return { key: 'ohne-datum', label: 'Ohne Datum' }
@@ -184,8 +174,6 @@ export function monthOf(value: string | null | undefined): { key: string; label:
   }
 }
 
-// ---------- Zeitbezug zu heute ----------
-
 const DAY_MS = 86_400_000
 const relativeFormat = new Intl.RelativeTimeFormat('de-DE', { numeric: 'auto' })
 
@@ -194,7 +182,6 @@ export function startOfToday(): Date {
   return new Date(now.getFullYear(), now.getMonth(), now.getDate())
 }
 
-/** Ganze Tage bis zum Datum (negativ = vergangen). */
 export function daysUntil(value: string | null | undefined, today: Date): number | null {
   const date = toDate(value)
   return date ? Math.round((date.getTime() - today.getTime()) / DAY_MS) : null
@@ -205,13 +192,11 @@ export function isPast(event: EventDetail, today: Date): boolean {
   return days !== null && days < 0
 }
 
-/** Mehrtägiges Event, das schon vor heute begonnen hat und noch nicht vorbei ist. */
 export function isRunning(event: EventDetail, today: Date): boolean {
   const start = daysUntil(event.startDate, today)
   return start !== null && start < 0 && !isPast(event, today)
 }
 
-/** „heute“, „morgen“, „in 3 Wochen“, „vor 2 Monaten“ … */
 export function relativeLabel(event: EventDetail, today: Date): string {
   if (isRunning(event, today)) return 'läuft gerade'
   const days = daysUntil(event.startDate, today)
@@ -222,11 +207,68 @@ export function relativeLabel(event: EventDetail, today: Date): string {
   return relativeFormat.format(Math.round(days / 30), 'month')
 }
 
-/** Großer Countdown für das nächste Event: Zahl + Einheit. */
 export function countdownOf(event: EventDetail, today: Date): { value: string; unit: string } {
   if (isRunning(event, today)) return { value: 'Jetzt', unit: 'läuft gerade' }
   const days = daysUntil(event.startDate, today)
   if (days === null) return { value: EMPTY, unit: '' }
   if (days === 0) return { value: 'Heute', unit: 'geht’s los' }
   return { value: String(days), unit: days === 1 ? 'Tag bis Beginn' : 'Tage bis Beginn' }
+}
+
+export function toIsoDate(date: Date): string {
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  return `${date.getFullYear()}-${month}-${day}`
+}
+
+function addDays(date: Date, days: number): Date {
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate() + days)
+}
+
+export function inDateRange(event: EventDetail, from: string | null, to: string | null): boolean {
+  if (!from && !to) return true
+  const start = event.startDate
+  if (!start) return false
+  const end = endDateOf(event) ?? start
+  return (!from || end >= from) && (!to || start <= to)
+}
+
+export function rangeLabel(from: string | null, to: string | null): string {
+  if (from && to) return from === to ? longDate(from) : `${longDate(from)} – ${longDate(to)}`
+  if (from) return `ab ${longDate(from)}`
+  if (to) return `bis ${longDate(to)}`
+  return 'Jederzeit'
+}
+
+export interface DatePreset {
+  label: string
+  from: string
+  to: string
+}
+
+export function datePresets(today: Date): DatePreset[] {
+  const weekday = today.getDay()
+  const friday = addDays(today, weekday === 0 ? -2 : 5 - weekday)
+  const weekendStart = friday.getTime() < today.getTime() ? today : friday
+  const year = today.getFullYear()
+  const month = today.getMonth()
+
+  return [
+    { label: 'Wochenende', from: toIsoDate(weekendStart), to: toIsoDate(addDays(friday, 2)) },
+    {
+      label: 'Diesen Monat',
+      from: toIsoDate(new Date(year, month, 1)),
+      to: toIsoDate(new Date(year, month + 1, 0)),
+    },
+    {
+      label: 'Nächsten Monat',
+      from: toIsoDate(new Date(year, month + 1, 1)),
+      to: toIsoDate(new Date(year, month + 2, 0)),
+    },
+    {
+      label: 'Nächste 3 Monate',
+      from: toIsoDate(today),
+      to: toIsoDate(new Date(year, month + 3, today.getDate())),
+    },
+  ]
 }

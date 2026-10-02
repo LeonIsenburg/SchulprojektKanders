@@ -300,8 +300,6 @@ function twoDigits(value: number): string {
   return String(value).padStart(2, '0')
 }
 
-// Kommt man aus der Liste, geht's per History zurück – Filter und Scroll-Position bleiben erhalten.
-// Vor/Zurück zwischen Events nutzt `replace`, damit dieser Weg immer direkt zur Liste führt.
 function goBack() {
   if (router.options.history.state.back) router.back()
   else router.push({ name: 'events' })

@@ -3,35 +3,11 @@
     <div class="h-1.5 shrink-0 bg-flare"></div>
 
     <header class="shrink-0 px-6 pt-5 pb-8 lg:px-10">
-      <div class="flex flex-wrap items-end justify-between gap-x-8 gap-y-5">
-        <div>
-          <p class="font-body text-xs tracking-[0.2em] text-ash uppercase">Kandern · Spielplan</p>
-          <h1 class="mt-2 font-display text-[clamp(2rem,5.5vw,4.25rem)] leading-[0.9] uppercase">
-            Veranstaltungen
-          </h1>
-        </div>
-
-        <nav aria-label="Nach Art filtern" class="flex flex-wrap gap-2">
-          <RouterLink
-            v-for="option in filterOptions"
-            :key="option.label"
-            :to="{ query: option.type ? { typ: option.type } : {} }"
-            replace
-            :aria-current="option.active ? 'true' : undefined"
-            class="border px-3 py-1.5 font-body text-xs font-semibold tracking-[0.2em] uppercase transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-flare"
-            :class="
-              option.active
-                ? 'border-flare bg-flare text-ink'
-                : 'border-bone/20 text-bone/75 hover:border-bone/60 hover:text-bone'
-            "
-          >
-            {{ option.label }}
-            <span class="ml-1 tabular-nums" :class="option.active ? 'text-ink/60' : 'text-ash'">
-              {{ option.count }}
-            </span>
-          </RouterLink>
-        </nav>
-      </div>
+      <p class="font-body text-xs tracking-[0.2em] text-ash uppercase">Kandern · Spielplan</p>
+      <h1 class="mt-2 font-display text-[clamp(2rem,5.5vw,4.25rem)] leading-[0.9] uppercase">
+        Veranstaltungen
+      </h1>
+      <EventFilterBar class="mt-6" :events="allEvents" :today="today" />
     </header>
 
     <main class="flex-1 px-6 pb-14 lg:px-10">
@@ -122,15 +98,13 @@
 
       <div v-if="!filteredEvents.length" class="py-24 text-center">
         <p class="font-display text-3xl uppercase">Keine Termine</p>
-        <p class="mt-2 font-body text-sm text-ash">
-          In dieser Kategorie ist gerade nichts geplant.
-        </p>
+        <p class="mt-2 font-body text-sm text-ash">Für diese Auswahl gibt es keine Termine.</p>
         <RouterLink
-          :to="{ query: {} }"
+          :to="filterLink({ type: null, from: null, to: null })"
           replace
           class="mt-6 inline-block font-body text-xs tracking-[0.2em] text-flare uppercase transition-colors hover:text-bone"
         >
-          Alle anzeigen
+          Filter zurücksetzen
         </RouterLink>
       </div>
     </main>
@@ -139,7 +113,10 @@
       <div
         class="flex flex-wrap justify-between gap-x-8 gap-y-2 font-body text-xs tracking-[0.2em] text-ash uppercase"
       >
-        <p>{{ upcoming.length }} kommende Termine</p>
+        <p>
+          {{ upcoming.length }}
+          {{ upcoming.length === 1 ? 'kommender Termin' : 'kommende Termine' }}
+        </p>
         <p>Alle Angaben ohne Gewähr</p>
       </div>
     </footer>
@@ -147,17 +124,18 @@
 </template>
 
 <script lang="ts">
-// Einlauf-Animation nur beim ersten Öffnen, nicht bei jeder Rückkehr aus der Detailansicht
 let introPlayed = false
 </script>
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { RouterLink, useRoute } from 'vue-router'
+import { RouterLink } from 'vue-router'
+import EventFilterBar from '@/components/EventFilterBar.vue'
 import EventRow from '@/components/EventRow.vue'
+import { matchesFilters, useEventFilters } from '@/composables/useEventFilters'
 import { listEvents } from '@/data/mockEvents'
 import { eventRoute, titleTransitionName } from '@/router'
-import { EVENT_TYPES, type EventDetail, type EventType } from '@/types/event'
+import type { EventDetail } from '@/types/event'
 import {
   countdownOf,
   fallback,
@@ -171,35 +149,17 @@ import {
   titleOf,
 } from '@/utils/eventFormat'
 
-const TYPE_LABELS: Record<EventType, string> = {
-  Konzert: 'Konzerte',
-  Party: 'Partys',
-  Festival: 'Festivals',
-}
-
-const route = useRoute()
 const today = startOfToday()
 const allEvents = listEvents()
+const { filters, filterLink } = useEventFilters()
 
 const playIntro = !introPlayed
 introPlayed = true
 
 document.title = 'Veranstaltungen · Kanders Events'
 
-const activeType = computed(() => EVENT_TYPES.find((type) => type === route.query.typ) ?? null)
-
-const filterOptions = computed(() => [
-  { label: 'Alle', type: null, count: allEvents.length, active: activeType.value === null },
-  ...EVENT_TYPES.map((type) => ({
-    label: TYPE_LABELS[type],
-    type,
-    count: allEvents.filter((event) => event.eventType === type).length,
-    active: activeType.value === type,
-  })),
-])
-
 const filteredEvents = computed(() =>
-  activeType.value ? allEvents.filter((event) => event.eventType === activeType.value) : allEvents,
+  allEvents.filter((event) => matchesFilters(event, filters.value)),
 )
 
 const upcoming = computed(() => filteredEvents.value.filter((event) => !isPast(event, today)))
@@ -231,7 +191,6 @@ const heroFacts = computed(() => {
   ]
 })
 
-// Reihenfolge, in der Hero und Zeilen nacheinander einlaufen
 const displayOrder = computed(
   () => new Map([...upcoming.value, ...pastEvents.value].map((event, index) => [event.id, index])),
 )
