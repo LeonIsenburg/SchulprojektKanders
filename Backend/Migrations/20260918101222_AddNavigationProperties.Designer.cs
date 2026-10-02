@@ -14,7 +14,6 @@ namespace Backend.Migrations
     [Migration("20260918101222_AddNavigationProperties")]
     partial class AddNavigationProperties
     {
-        /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618

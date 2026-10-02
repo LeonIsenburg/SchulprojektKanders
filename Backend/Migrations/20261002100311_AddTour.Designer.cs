@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Backend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20261002085111_AddPositionToRelations")]
-    partial class AddPositionToRelations
+    [Migration("20261002100311_AddTour")]
+    partial class AddTour
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -217,6 +217,100 @@ namespace Backend.Migrations
                         .IsUnique();
 
                     b.ToTable("Partyname");
+                });
+
+            modelBuilder.Entity("Backend.Models.Event.Tour", b =>
+                {
+                    b.Property<Guid>("Guid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("EventId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Organizer")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("TourID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<Guid>("TourNameId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Guid");
+
+                    b.HasIndex("EventId")
+                        .IsUnique();
+
+                    b.HasIndex("TourNameId");
+
+                    b.ToTable("Tour");
+                });
+
+            modelBuilder.Entity("Backend.Models.Event.TourName", b =>
+                {
+                    b.Property<Guid>("Guid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Tour_NameID")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Guid");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("TourName");
+                });
+
+            modelBuilder.Entity("Backend.Models.Event.TourStop", b =>
+                {
+                    b.Property<Guid>("Guid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateOnly>("Date")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Day")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<TimeOnly>("EntryTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Position")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<double>("Price")
+                        .HasColumnType("REAL");
+
+                    b.Property<int>("PriceType")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<TimeOnly>("StartTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("TourId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("ValidLocationId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Guid");
+
+                    b.HasIndex("ValidLocationId");
+
+                    b.HasIndex("TourId", "Position")
+                        .IsUnique();
+
+                    b.ToTable("TourStop");
                 });
 
             modelBuilder.Entity("Backend.Models.Location.City", b =>
@@ -768,6 +862,31 @@ namespace Backend.Migrations
                     b.ToTable("PartyBand");
                 });
 
+            modelBuilder.Entity("Backend.Models.Relations.TourBand", b =>
+                {
+                    b.Property<Guid>("Guid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("BandId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Position")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<Guid>("TourId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Guid");
+
+                    b.HasIndex("BandId");
+
+                    b.HasIndex("TourId", "BandId")
+                        .IsUnique();
+
+                    b.ToTable("TourBand");
+                });
+
             modelBuilder.Entity("Backend.Models.Event.Concert", b =>
                 {
                     b.HasOne("Backend.Models.Music.Band", "Band")
@@ -842,6 +961,44 @@ namespace Backend.Migrations
                     b.Navigation("Event");
 
                     b.Navigation("PartyName");
+                });
+
+            modelBuilder.Entity("Backend.Models.Event.Tour", b =>
+                {
+                    b.HasOne("Backend.Models.Event.Event", "Event")
+                        .WithOne("Tour")
+                        .HasForeignKey("Backend.Models.Event.Tour", "EventId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Backend.Models.Event.TourName", "TourName")
+                        .WithMany()
+                        .HasForeignKey("TourNameId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Event");
+
+                    b.Navigation("TourName");
+                });
+
+            modelBuilder.Entity("Backend.Models.Event.TourStop", b =>
+                {
+                    b.HasOne("Backend.Models.Event.Tour", "Tour")
+                        .WithMany("Stops")
+                        .HasForeignKey("TourId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Backend.Models.Location.ValidLocation", "ValidLocation")
+                        .WithMany()
+                        .HasForeignKey("ValidLocationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Tour");
+
+                    b.Navigation("ValidLocation");
                 });
 
             modelBuilder.Entity("Backend.Models.Location.ValidLocation", b =>
@@ -1020,6 +1177,25 @@ namespace Backend.Migrations
                     b.Navigation("Party");
                 });
 
+            modelBuilder.Entity("Backend.Models.Relations.TourBand", b =>
+                {
+                    b.HasOne("Backend.Models.Music.Band", "Band")
+                        .WithMany("Tours")
+                        .HasForeignKey("BandId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Backend.Models.Event.Tour", "Tour")
+                        .WithMany("Bands")
+                        .HasForeignKey("TourId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Band");
+
+                    b.Navigation("Tour");
+                });
+
             modelBuilder.Entity("Backend.Models.Event.Concert", b =>
                 {
                     b.Navigation("Bands");
@@ -1032,6 +1208,8 @@ namespace Backend.Migrations
                     b.Navigation("Festival");
 
                     b.Navigation("Party");
+
+                    b.Navigation("Tour");
                 });
 
             modelBuilder.Entity("Backend.Models.Event.Festival", b =>
@@ -1042,6 +1220,13 @@ namespace Backend.Migrations
             modelBuilder.Entity("Backend.Models.Event.Party", b =>
                 {
                     b.Navigation("Bands");
+                });
+
+            modelBuilder.Entity("Backend.Models.Event.Tour", b =>
+                {
+                    b.Navigation("Bands");
+
+                    b.Navigation("Stops");
                 });
 
             modelBuilder.Entity("Backend.Models.Member.Member", b =>
@@ -1062,6 +1247,8 @@ namespace Backend.Migrations
                     b.Navigation("Parties");
 
                     b.Navigation("Songs");
+
+                    b.Navigation("Tours");
                 });
 
             modelBuilder.Entity("Backend.Models.Music.Instrument", b =>

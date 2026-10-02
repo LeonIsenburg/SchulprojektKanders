@@ -17,9 +17,5 @@ public class Band : BaseEntity
 
     public ICollection<BandMusicGenre> MusicGenres {get; set;} = new List<BandMusicGenre>();
 
-    public ICollection<ConcertBand> Concerts {get; set;} = new List<ConcertBand>();
-
-    public ICollection<FestivalBand> Festivals {get; set;} = new List<FestivalBand>();
-
-    public ICollection<PartyBand> Parties {get; set;} = new List<PartyBand>();
+    public ICollection<EventArtist> Events {get; set;} = new List<EventArtist>();
 }

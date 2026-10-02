@@ -14,7 +14,6 @@ namespace Backend.Migrations
     [Migration("20260911111443_AddCity")]
     partial class AddCity
     {
-        /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618

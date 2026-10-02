@@ -1,5 +1,7 @@
+using Backend.Models.Event;
 using Backend.Models.Location;
 using Backend.Models.Music;
+using Backend.Models.Relations;
 
 namespace Backend.Models.Responses;
 
@@ -9,82 +11,79 @@ public static class EventMapper
     {
         return new EventResponse
         {
-            StartDate = e.StartDate,
-            StartTime = e.StartTime,
-            EntryTime = e.EntryTime,
-            Price = e.Price,
-            PriceType = e.PriceType,
-            EventType = e.EventType,
-            Location = e.ValidLocation.ToResponse(),
-            Concert = e.Concert is null ? null : new ConcertResponse
+            Name = e.Name,
+            Type = e.Type,
+            Status = e.Status,
+            Dates = e.Dates.OrderBy(d => d.Position).Select(d => d.ToResponse()).ToList(),
+            Artists = e.Artists.OrderBy(a => a.Position).Select(a => a.ToResponse()).ToList(),
+            Organizer = new OrganizerResponse
             {
-                Organizer = e.Concert.Organizer,
-                Bands = e.Concert.Bands.OrderBy(cb => cb.Position).Select(cb => cb.Band.ToResponse()).ToList()
+                Name = e.Organizer?.Name,
+                Website = e.Organizer?.Website
             },
-            Party = e.Party is null ? null : new PartyResponse
+            AgeRestriction = e.AgeRestriction,
+            Description = e.Description,
+            Website = e.Website,
+            Socials = new SocialsResponse
             {
-                EndDate = e.Party.EndDate,
-                EndTime = e.Party.EndTime,
-                Organizer = e.Party.Organizer,
-                PartyName = e.Party.PartyName.Name,
-                Bands = e.Party.Bands.OrderBy(pb => pb.Position).Select(pb => pb.Band.ToResponse()).ToList()
+                Instagram = e.Instagram,
+                Facebook = e.Facebook,
+                Tiktok = e.TikTok
             },
-            Festival = e.Festival is null ? null : new FestivalResponse
+            ExtraInfo = e.ExtraInfo
+        };
+    }
+
+    private static EventDateResponse ToResponse(this EventDate date)
+    {
+        return new EventDateResponse
+        {
+            Start = date.Start,
+            End = date.End,
+            DoorsOpen = date.DoorsOpen,
+            Location = date.ValidLocation.ToResponse(),
+            Tickets = new TicketsResponse
             {
-                EndDate = e.Festival.EndDate,
-                EndTime = e.Festival.EndTime,
-                Organizer = e.Festival.Organizer,
-                FestivalName = e.Festival.FestivalName.Name,
-                Bands = e.Festival.Bands.OrderBy(fb => fb.Position).Select(fb => new BandPerformanceResponse
-                {
-                    Band = fb.Band.ToResponse(),
-                    Date = fb.Date,
-                    Time = fb.Time,
-                    Day = fb.Day
-                }).ToList()
+                Price = date.Price,
+                Currency = date.Currency,
+                Presale = date.Presale,
+                Url = date.TicketUrl
             }
         };
     }
 
-    private static LocationResponse ToResponse(this ValidLocation location)
+    private static LocationResponse ToResponse(this ValidLocation? location)
     {
         return new LocationResponse
         {
-            PostalCode = location.PostalCode,
-            Street = location.Street,
-            HouseNumber = location.HouseNumber,
-            City = location.City.Name,
-            District = location.District.Name,
-            Region = location.Region.Name,
-            State = location.State.Name,
-            EventLocationName = location.EventLocation.Name
+            Venue = location?.EventLocation?.Name,
+            Street = location?.Street,
+            HouseNumber = location?.HouseNumber,
+            PostalCode = location?.PostalCode,
+            City = location?.City?.Name,
+            District = location?.District?.Name,
+            Region = location?.Region?.Name,
+            State = location?.State?.Name,
+            Country = location?.Country
         };
     }
 
-    private static BandResponse ToResponse(this Band band)
+    private static ArtistResponse ToResponse(this EventArtist artist)
     {
-        var genres = band.MusicGenres.OrderBy(bg => bg.Position).Select(bg => bg.MusicGenre.Description).ToList();
-        var songs = band.Songs.OrderBy(bs => bs.Position).Select(bs => bs.Song.Name).ToList();
+        var band = artist.Band;
 
-        return new BandResponse
+        return new ArtistResponse
         {
             Name = band.Name,
-            Musicians = band.Musicians.OrderBy(bm => bm.Position).Select(bm => bm.Musician.ToResponse()).ToList(),
-            // leere Listen wie im Request als null ausgeben
-            Genres = genres.Count > 0 ? genres : null,
-            Songs = songs.Count > 0 ? songs : null
-        };
-    }
-
-    private static MusicianResponse ToResponse(this Musician musician)
-    {
-        // Beim Anlegen wird ein fehlender Vor-/Nachname mit dem Künstlernamen gefüllt
-        // (siehe RequestRepository) – das hier wieder als null ausgeben
-        return new MusicianResponse
-        {
-            ArtistName = musician.ArtistName,
-            FirstName = musician.FirstName == musician.ArtistName ? null : musician.FirstName,
-            LastName = musician.LastName == musician.ArtistName ? null : musician.LastName
+            Genres = band.MusicGenres.OrderBy(bg => bg.Position).Select(bg => bg.MusicGenre.Description).ToList(),
+            Members = band.Musicians.OrderBy(bm => bm.Position).Select(bm => new MemberResponse
+            {
+                ArtistName = bm.Musician.ArtistName,
+                FirstName = bm.Musician.FirstName,
+                LastName = bm.Musician.LastName
+            }).ToList(),
+            Songs = band.Songs.OrderBy(bs => bs.Position).Select(bs => bs.Song.Name).ToList(),
+            Performance = artist.Performance
         };
     }
 }

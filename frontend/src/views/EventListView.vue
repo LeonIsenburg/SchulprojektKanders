@@ -147,7 +147,6 @@
 </template>
 
 <script lang="ts">
-// Einlauf-Animation nur beim ersten Öffnen, nicht bei jeder Rückkehr aus der Detailansicht
 let introPlayed = false
 </script>
 
@@ -231,7 +230,6 @@ const heroFacts = computed(() => {
   ]
 })
 
-// Reihenfolge, in der Hero und Zeilen nacheinander einlaufen
 const displayOrder = computed(
   () => new Map([...upcoming.value, ...pastEvents.value].map((event, index) => [event.id, index])),
 )

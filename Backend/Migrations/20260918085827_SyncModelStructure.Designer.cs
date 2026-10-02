@@ -14,7 +14,6 @@ namespace Backend.Migrations
     [Migration("20260918085827_SyncModelStructure")]
     partial class SyncModelStructure
     {
-        /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618

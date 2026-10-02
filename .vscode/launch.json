@@ -2,7 +2,6 @@
   "version": "0.2.0",
   "configurations": [
     {
-      // Startet Backend, Frontend und DB über Aspire und öffnet das Dashboard (inkl. Login-Token)
       "name": "Aspire (Backend + Frontend + DB)",
       "type": "coreclr",
       "request": "launch",
@@ -12,7 +11,6 @@
       "cwd": "${workspaceFolder}/AppHost",
       "stopAtEntry": false,
       "console": "integratedTerminal",
-      // entspricht dem "https"-Profil aus AppHost/Properties/launchSettings.json
       "env": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "DOTNET_ENVIRONMENT": "Development",
@@ -28,7 +26,6 @@
       }
     },
     {
-      // Während Aspire läuft: an das Backend anhängen, damit Breakpoints im Backend greifen
       "name": "Aspire: an Backend anhängen",
       "type": "coreclr",
       "request": "attach",

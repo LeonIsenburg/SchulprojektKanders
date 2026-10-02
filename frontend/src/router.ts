@@ -16,16 +16,12 @@ const router = createRouter({
   history: createWebHashHistory(),
   routes,
   scrollBehavior(to, from, savedPosition) {
-    // Zurück-Navigation: dort weitermachen, wo man war
     if (savedPosition) return savedPosition
-    // Nur Filter (Query) geändert: Scroll-Position behalten
     if (to.path === from.path) return false
     return { top: 0 }
   },
 })
 
-// Seitenwechsel über die View Transitions API animieren. Elemente mit gleichem
-// `view-transition-name` (z. B. der Event-Titel) morphen dabei von Liste zu Detail.
 let finishViewTransition: (() => void) | null = null
 
 router.beforeResolve((to, from) => {
@@ -45,19 +41,16 @@ router.beforeResolve((to, from) => {
 })
 
 router.afterEach(async () => {
-  // DOM-Update und Scroll-Wiederherstellung abwarten, erst dann den neuen Zustand freigeben
   await nextTick()
   await new Promise((resolve) => setTimeout(resolve))
   finishViewTransition?.()
   finishViewTransition = null
 })
 
-/** Route zur Detailansicht eines Events. */
 export function eventRoute(id: number) {
   return { name: 'event-detail', params: { id } }
 }
 
-/** Gemeinsamer Name, damit der Titel beim Seitenwechsel von Liste zu Detail morpht. */
 export function titleTransitionName(event: { id: number }): string {
   return `event-title-${event.id}`
 }

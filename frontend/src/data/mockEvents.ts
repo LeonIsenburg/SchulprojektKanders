@@ -366,7 +366,6 @@ export const mockEvents: EventDetail[] = [
   },
 ]
 
-/** Alle Events chronologisch – so, wie später auch die API sie liefern sollte. */
 export function listEvents(): EventDetail[] {
   return [...mockEvents].sort((a, b) => (a.startDate ?? '').localeCompare(b.startDate ?? ''))
 }

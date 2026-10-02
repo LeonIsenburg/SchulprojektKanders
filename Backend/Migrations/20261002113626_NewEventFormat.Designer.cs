@@ -11,42 +11,13 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Backend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20261002085111_AddPositionToRelations")]
-    partial class AddPositionToRelations
+    [Migration("20261002113626_NewEventFormat")]
+    partial class NewEventFormat
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.12");
-
-            modelBuilder.Entity("Backend.Models.Event.Concert", b =>
-                {
-                    b.Property<Guid>("Guid")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("BandId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("ConcertID")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<Guid>("EventId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Organizer")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Guid");
-
-                    b.HasIndex("BandId");
-
-                    b.HasIndex("EventId")
-                        .IsUnique();
-
-                    b.ToTable("Concert");
-                });
 
             modelBuilder.Entity("Backend.Models.Event.Event", b =>
                 {
@@ -54,151 +25,103 @@ namespace Backend.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<TimeOnly>("EntryTime")
+                    b.Property<int?>("AgeRestriction")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Description")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("EventID")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("EventType")
-                        .HasColumnType("INTEGER");
+                    b.PrimitiveCollection<string>("ExtraInfo")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Facebook")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Instagram")
+                        .HasColumnType("TEXT");
 
                     b.Property<Guid>("MemberId")
                         .HasColumnType("TEXT");
 
-                    b.Property<double>("Price")
-                        .HasColumnType("REAL");
-
-                    b.Property<int>("PriceType")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateOnly>("StartDate")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("StartDay")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<TimeOnly>("StartTime")
+                    b.Property<Guid?>("OrganizerId")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Status")
                         .HasColumnType("INTEGER");
 
-                    b.Property<Guid>("ValidLocationId")
+                    b.Property<string>("TikTok")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Website")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Guid");
 
                     b.HasIndex("MemberId");
 
-                    b.HasIndex("ValidLocationId");
+                    b.HasIndex("OrganizerId");
 
                     b.ToTable("Event");
                 });
 
-            modelBuilder.Entity("Backend.Models.Event.Festival", b =>
+            modelBuilder.Entity("Backend.Models.Event.EventDate", b =>
                 {
                     b.Property<Guid>("Guid")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateOnly>("EndDate")
+                    b.Property<string>("Currency")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("EndDay")
-                        .IsRequired()
+                    b.Property<DateTime?>("DoorsOpen")
                         .HasColumnType("TEXT");
 
-                    b.Property<TimeOnly>("EndTime")
+                    b.Property<DateTime?>("End")
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("EventId")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("FestivalID")
+                    b.Property<int>("Position")
                         .HasColumnType("INTEGER");
 
-                    b.Property<Guid>("FestivalNameId")
+                    b.Property<bool?>("Presale")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<double?>("Price")
+                        .HasColumnType("REAL");
+
+                    b.Property<DateTime>("Start")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Organizer")
-                        .IsRequired()
+                    b.Property<string>("TicketUrl")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid?>("ValidLocationId")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Guid");
 
-                    b.HasIndex("EventId")
+                    b.HasIndex("ValidLocationId");
+
+                    b.HasIndex("EventId", "Position")
                         .IsUnique();
 
-                    b.HasIndex("FestivalNameId", "EndDate")
-                        .IsUnique();
-
-                    b.ToTable("Festival");
+                    b.ToTable("EventDate");
                 });
 
-            modelBuilder.Entity("Backend.Models.Event.FestivalName", b =>
-                {
-                    b.Property<Guid>("Guid")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("Festival_NameID")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Guid");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
-
-                    b.ToTable("FestivalName");
-                });
-
-            modelBuilder.Entity("Backend.Models.Event.Party", b =>
-                {
-                    b.Property<Guid>("Guid")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateOnly>("EndDate")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("EndDay")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<TimeOnly>("EndTime")
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("EventId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Organizer")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("PartyID")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<Guid>("PartyNameId")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Guid");
-
-                    b.HasIndex("EventId")
-                        .IsUnique();
-
-                    b.HasIndex("PartyNameId", "EndDate")
-                        .IsUnique();
-
-                    b.ToTable("Party");
-                });
-
-            modelBuilder.Entity("Backend.Models.Event.PartyName", b =>
+            modelBuilder.Entity("Backend.Models.Event.Organizer", b =>
                 {
                     b.Property<Guid>("Guid")
                         .ValueGeneratedOnAdd()
@@ -208,15 +131,18 @@ namespace Backend.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("Party_NameID")
+                    b.Property<int>("OrganizerID")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("Website")
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Guid");
 
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Partyname");
+                    b.ToTable("Organizer");
                 });
 
             modelBuilder.Entity("Backend.Models.Location.City", b =>
@@ -330,37 +256,39 @@ namespace Backend.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("CityId")
+                    b.Property<Guid?>("CityId")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("DistrictId")
+                    b.Property<string>("Country")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("EventLocationId")
+                    b.Property<Guid?>("DistrictId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid?>("EventLocationId")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("HouseNumber")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("PostalCode")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("RegionId")
+                    b.Property<Guid?>("RegionId")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("StateId")
+                    b.Property<Guid?>("StateId")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Street")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("ValidLocationID")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Guid");
+
+                    b.HasIndex("CityId");
 
                     b.HasIndex("DistrictId");
 
@@ -369,9 +297,6 @@ namespace Backend.Migrations
                     b.HasIndex("RegionId");
 
                     b.HasIndex("StateId");
-
-                    b.HasIndex("CityId", "DistrictId", "RegionId", "StateId", "EventLocationId")
-                        .IsUnique();
 
                     b.ToTable("ValidLocation");
                 });
@@ -545,11 +470,9 @@ namespace Backend.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("FirstName")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("LastName")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("MusicianID")
@@ -558,9 +481,6 @@ namespace Backend.Migrations
                     b.HasKey("Guid");
 
                     b.HasIndex("ArtistName")
-                        .IsUnique();
-
-                    b.HasIndex("FirstName", "LastName")
                         .IsUnique();
 
                     b.ToTable("Musician");
@@ -662,7 +582,7 @@ namespace Backend.Migrations
                     b.ToTable("BandSong");
                 });
 
-            modelBuilder.Entity("Backend.Models.Relations.ConcertBand", b =>
+            modelBuilder.Entity("Backend.Models.Relations.EventArtist", b =>
                 {
                     b.Property<Guid>("Guid")
                         .ValueGeneratedOnAdd()
@@ -671,7 +591,10 @@ namespace Backend.Migrations
                     b.Property<Guid>("BandId")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("ConcertId")
+                    b.Property<Guid>("EventId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("Performance")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Position")
@@ -681,44 +604,10 @@ namespace Backend.Migrations
 
                     b.HasIndex("BandId");
 
-                    b.HasIndex("ConcertId", "BandId")
+                    b.HasIndex("EventId", "BandId")
                         .IsUnique();
 
-                    b.ToTable("ConcertBand");
-                });
-
-            modelBuilder.Entity("Backend.Models.Relations.FestivalBand", b =>
-                {
-                    b.Property<Guid>("Guid")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("BandId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateOnly?>("Date")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Day")
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("FestivalId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("Position")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<TimeOnly?>("Time")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Guid");
-
-                    b.HasIndex("BandId");
-
-                    b.HasIndex("FestivalId", "BandId")
-                        .IsUnique();
-
-                    b.ToTable("FestivalBand");
+                    b.ToTable("EventArtist");
                 });
 
             modelBuilder.Entity("Backend.Models.Relations.MusicianInstrument", b =>
@@ -743,50 +632,6 @@ namespace Backend.Migrations
                     b.ToTable("MusicianInstrument");
                 });
 
-            modelBuilder.Entity("Backend.Models.Relations.PartyBand", b =>
-                {
-                    b.Property<Guid>("Guid")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("BandId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("PartyId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("Position")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Guid");
-
-                    b.HasIndex("BandId");
-
-                    b.HasIndex("PartyId", "BandId")
-                        .IsUnique();
-
-                    b.ToTable("PartyBand");
-                });
-
-            modelBuilder.Entity("Backend.Models.Event.Concert", b =>
-                {
-                    b.HasOne("Backend.Models.Music.Band", "Band")
-                        .WithMany()
-                        .HasForeignKey("BandId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Backend.Models.Event.Event", "Event")
-                        .WithOne("Concert")
-                        .HasForeignKey("Backend.Models.Event.Concert", "EventId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Band");
-
-                    b.Navigation("Event");
-                });
-
             modelBuilder.Entity("Backend.Models.Event.Event", b =>
                 {
                     b.HasOne("Backend.Models.Member.Member", "Member")
@@ -795,86 +640,53 @@ namespace Backend.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Backend.Models.Location.ValidLocation", "ValidLocation")
+                    b.HasOne("Backend.Models.Event.Organizer", "Organizer")
                         .WithMany()
-                        .HasForeignKey("ValidLocationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("OrganizerId");
 
                     b.Navigation("Member");
 
+                    b.Navigation("Organizer");
+                });
+
+            modelBuilder.Entity("Backend.Models.Event.EventDate", b =>
+                {
+                    b.HasOne("Backend.Models.Event.Event", "Event")
+                        .WithMany("Dates")
+                        .HasForeignKey("EventId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Backend.Models.Location.ValidLocation", "ValidLocation")
+                        .WithMany()
+                        .HasForeignKey("ValidLocationId");
+
+                    b.Navigation("Event");
+
                     b.Navigation("ValidLocation");
-                });
-
-            modelBuilder.Entity("Backend.Models.Event.Festival", b =>
-                {
-                    b.HasOne("Backend.Models.Event.Event", "Event")
-                        .WithOne("Festival")
-                        .HasForeignKey("Backend.Models.Event.Festival", "EventId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Backend.Models.Event.FestivalName", "FestivalName")
-                        .WithMany()
-                        .HasForeignKey("FestivalNameId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Event");
-
-                    b.Navigation("FestivalName");
-                });
-
-            modelBuilder.Entity("Backend.Models.Event.Party", b =>
-                {
-                    b.HasOne("Backend.Models.Event.Event", "Event")
-                        .WithOne("Party")
-                        .HasForeignKey("Backend.Models.Event.Party", "EventId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Backend.Models.Event.PartyName", "PartyName")
-                        .WithMany()
-                        .HasForeignKey("PartyNameId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Event");
-
-                    b.Navigation("PartyName");
                 });
 
             modelBuilder.Entity("Backend.Models.Location.ValidLocation", b =>
                 {
                     b.HasOne("Backend.Models.Location.City", "City")
                         .WithMany()
-                        .HasForeignKey("CityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CityId");
 
                     b.HasOne("Backend.Models.Location.District", "District")
                         .WithMany()
-                        .HasForeignKey("DistrictId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("DistrictId");
 
                     b.HasOne("Backend.Models.Location.EventLocation", "EventLocation")
                         .WithMany()
-                        .HasForeignKey("EventLocationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("EventLocationId");
 
                     b.HasOne("Backend.Models.Location.Region", "Region")
                         .WithMany()
-                        .HasForeignKey("RegionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("RegionId");
 
                     b.HasOne("Backend.Models.Location.State", "State")
                         .WithMany()
-                        .HasForeignKey("StateId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("StateId");
 
                     b.Navigation("City");
 
@@ -944,42 +756,23 @@ namespace Backend.Migrations
                     b.Navigation("Song");
                 });
 
-            modelBuilder.Entity("Backend.Models.Relations.ConcertBand", b =>
+            modelBuilder.Entity("Backend.Models.Relations.EventArtist", b =>
                 {
                     b.HasOne("Backend.Models.Music.Band", "Band")
-                        .WithMany("Concerts")
+                        .WithMany("Events")
                         .HasForeignKey("BandId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Backend.Models.Event.Concert", "Concert")
-                        .WithMany("Bands")
-                        .HasForeignKey("ConcertId")
+                    b.HasOne("Backend.Models.Event.Event", "Event")
+                        .WithMany("Artists")
+                        .HasForeignKey("EventId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Band");
 
-                    b.Navigation("Concert");
-                });
-
-            modelBuilder.Entity("Backend.Models.Relations.FestivalBand", b =>
-                {
-                    b.HasOne("Backend.Models.Music.Band", "Band")
-                        .WithMany("Festivals")
-                        .HasForeignKey("BandId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Backend.Models.Event.Festival", "Festival")
-                        .WithMany("Bands")
-                        .HasForeignKey("FestivalId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Band");
-
-                    b.Navigation("Festival");
+                    b.Navigation("Event");
                 });
 
             modelBuilder.Entity("Backend.Models.Relations.MusicianInstrument", b =>
@@ -1001,47 +794,11 @@ namespace Backend.Migrations
                     b.Navigation("Musician");
                 });
 
-            modelBuilder.Entity("Backend.Models.Relations.PartyBand", b =>
-                {
-                    b.HasOne("Backend.Models.Music.Band", "Band")
-                        .WithMany("Parties")
-                        .HasForeignKey("BandId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Backend.Models.Event.Party", "Party")
-                        .WithMany("Bands")
-                        .HasForeignKey("PartyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Band");
-
-                    b.Navigation("Party");
-                });
-
-            modelBuilder.Entity("Backend.Models.Event.Concert", b =>
-                {
-                    b.Navigation("Bands");
-                });
-
             modelBuilder.Entity("Backend.Models.Event.Event", b =>
                 {
-                    b.Navigation("Concert");
+                    b.Navigation("Artists");
 
-                    b.Navigation("Festival");
-
-                    b.Navigation("Party");
-                });
-
-            modelBuilder.Entity("Backend.Models.Event.Festival", b =>
-                {
-                    b.Navigation("Bands");
-                });
-
-            modelBuilder.Entity("Backend.Models.Event.Party", b =>
-                {
-                    b.Navigation("Bands");
+                    b.Navigation("Dates");
                 });
 
             modelBuilder.Entity("Backend.Models.Member.Member", b =>
@@ -1051,15 +808,11 @@ namespace Backend.Migrations
 
             modelBuilder.Entity("Backend.Models.Music.Band", b =>
                 {
-                    b.Navigation("Concerts");
-
-                    b.Navigation("Festivals");
+                    b.Navigation("Events");
 
                     b.Navigation("MusicGenres");
 
                     b.Navigation("Musicians");
-
-                    b.Navigation("Parties");
 
                     b.Navigation("Songs");
                 });

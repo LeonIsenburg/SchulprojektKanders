@@ -4,10 +4,8 @@
 
 namespace Backend.Migrations
 {
-    /// <inheritdoc />
     public partial class AddPositionToRelations : Migration
     {
-        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<int>(
@@ -53,7 +51,6 @@ namespace Backend.Migrations
                 defaultValue: 0);
         }
 
-        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(

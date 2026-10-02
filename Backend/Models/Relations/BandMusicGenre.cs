@@ -13,6 +13,5 @@ public class BandMusicGenre : BaseEntity
     public required Guid MusicGenreId {get; set;}
     public MusicGenre MusicGenre {get; set;} = null!;
 
-    // Reihenfolge wie im Request, damit GET die Listen in derselben Reihenfolge liefert
     public int Position {get; set;}
 }

@@ -2,19 +2,21 @@ namespace Backend.Models.Requests;
 
 public class LocationRequest
 {
-    public required string PostalCode {get; set;}
+    public string? Venue {get; set;}
 
-    public required string Street {get; set;}
+    public string? Street {get; set;}
 
-    public required string HouseNumber {get; set;}
+    public string? HouseNumber {get; set;}
 
-    public required string City {get; set;}
+    public string? PostalCode {get; set;}
 
-    public required string District {get; set;}
+    public string? City {get; set;}
 
-    public required string Region {get; set;}
+    public string? District {get; set;}
 
-    public required string State {get; set;}
+    public string? Region {get; set;}
 
-    public required string EventLocationName {get; set;}
+    public string? State {get; set;}
+
+    public string? Country {get; set;}
 }

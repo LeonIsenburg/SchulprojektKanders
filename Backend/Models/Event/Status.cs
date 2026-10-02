@@ -2,8 +2,8 @@ namespace Backend.Models.Event;
 
 public enum Status
 {
-    Geplant,
-    Ausverkauft,
-    Abgesagt,
-    Beendet
+    Planned,
+    SoldOut,
+    Cancelled,
+    Finished
 }

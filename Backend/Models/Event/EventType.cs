@@ -2,7 +2,9 @@ namespace Backend.Models.Event;
 
 public enum EventType
 {
-    Konzert,
     Festival,
-    Party
+    Concert,
+    Tour,
+    Party,
+    Other
 }

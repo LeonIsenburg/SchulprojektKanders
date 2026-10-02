@@ -14,7 +14,6 @@ namespace Backend.Migrations
     [Migration("20260925094055_SeedDevMember")]
     partial class SeedDevMember
     {
-        /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618

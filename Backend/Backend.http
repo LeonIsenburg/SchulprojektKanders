@@ -1,204 +1,230 @@
 @Backend_HostAddress = http://localhost:5284
 
-### Konzert anlegen
+###
 # @name createConcert
 POST {{Backend_HostAddress}}/api/events
 Content-Type: application/json
 
 {
-  "startDate": "2026-11-14",
-  "startTime": "20:00",
-  "entryTime": "19:00",
-  "price": 29.9,
-  "priceType": "Vorverkauf",
-  "eventType": "Konzert",
-  "location": {
-    "postalCode": "50667",
-    "street": "Domplatz",
-    "houseNumber": "1",
-    "city": "Köln",
-    "district": "Innenstadt",
-    "region": "Köln",
-    "state": "Nordrhein-Westfalen",
-    "eventLocationName": "Live Music Hall"
-  },
-  "concert": {
-    "organizer": "Konzertbüro Köln",
-    "bands": [
-      {
-        "name": "The Testers",
-        "musicians": [
-          { "artistName": "Ricky Riff", "firstName": "Richard", "lastName": "Riffel" },
-          { "artistName": "Drumbo" }
-        ],
-        "genres": [ "Rock", "Indie" ],
-        "songs": [ "Hello World" ]
+  "name": "The Testers live",
+  "type": "CONCERT",
+  "status": null,
+  "dates": [
+    {
+      "start": "2026-11-14T20:00:00",
+      "end": null,
+      "doorsOpen": "2026-11-14T19:00:00",
+      "location": {
+        "venue": "Live Music Hall",
+        "street": "Lichtstraße",
+        "houseNumber": "30",
+        "postalCode": "50825",
+        "city": "Köln",
+        "district": "Ehrenfeld",
+        "region": "Köln",
+        "state": "Nordrhein-Westfalen",
+        "country": "DE"
       },
-      {
-        "name": "Side Project",
-        "musicians": [
-          { "artistName": "Drumbo" }
-        ],
-        "genres": [ "Rock" ]
-      }
-    ]
-  }
+      "tickets": { "price": 29.9, "currency": "EUR", "presale": true, "url": "https://example.com/tickets" }
+    }
+  ],
+  "artists": [
+    {
+      "name": "The Testers",
+      "genres": ["Rock", "Indie"],
+      "members": [
+        { "artistName": "Ricky Riff", "firstName": "Richard", "lastName": "Riffel" },
+        { "artistName": "Drumbo", "firstName": null, "lastName": null }
+      ],
+      "songs": ["Hello World"],
+      "performance": null
+    }
+  ],
+  "organizer": { "name": "Konzertbüro Köln", "website": "https://example.com" },
+  "ageRestriction": 16,
+  "description": "Release-Konzert zum neuen Album.",
+  "website": null,
+  "socials": { "instagram": "@thetesters", "facebook": null, "tiktok": null },
+  "extraInfo": ["Einlass ab 16 Jahren"]
 }
 
-### Festival anlegen
+###
 # @name createFestival
 POST {{Backend_HostAddress}}/api/events
 Content-Type: application/json
 
 {
-  "startDate": "2027-07-02",
-  "startTime": "12:00",
-  "entryTime": "10:00",
-  "price": 149,
-  "priceType": "Vorverkauf",
-  "eventType": "Festival",
-  "location": {
-    "postalCode": "53902",
-    "street": "Festivalwiese",
-    "houseNumber": "3",
-    "city": "Bad Münstereifel",
-    "district": "Euskirchen",
-    "region": "Eifel",
-    "state": "Nordrhein-Westfalen",
-    "eventLocationName": "Eifel-Gelände"
-  },
-  "festival": {
-    "endDate": "2027-07-04",
-    "endTime": "23:00",
-    "organizer": "Eifel Events",
-    "festivalName": "Eifel Open Air",
-    "bands": [
-      {
-        "band": {
-          "name": "The Testers",
-          "musicians": [ { "artistName": "Ricky Riff" } ]
-        },
-        "date": "2027-07-02",
-        "time": "18:00",
-        "day": "Freitag"
-      }
-    ]
-  }
+  "name": "Eifel Open Air",
+  "type": "FESTIVAL",
+  "status": null,
+  "dates": [
+    {
+      "start": "2027-07-02T12:00:00",
+      "end": "2027-07-04T23:00:00",
+      "doorsOpen": "2027-07-02T10:00:00",
+      "location": {
+        "venue": "Eifel-Gelände",
+        "street": "Festivalwiese",
+        "houseNumber": "3",
+        "postalCode": "53902",
+        "city": "Bad Münstereifel",
+        "district": "Euskirchen",
+        "region": "Eifel",
+        "state": "Nordrhein-Westfalen",
+        "country": "DE"
+      },
+      "tickets": { "price": 149, "currency": "EUR", "presale": true, "url": null }
+    }
+  ],
+  "artists": [
+    {
+      "name": "The Testers",
+      "genres": ["Rock"],
+      "members": [{ "artistName": "Ricky Riff", "firstName": null, "lastName": null }],
+      "songs": [],
+      "performance": "2027-07-02T18:00:00"
+    },
+    {
+      "name": "DJ Crew",
+      "genres": ["Techno"],
+      "members": [{ "artistName": "DJ Null", "firstName": null, "lastName": null }],
+      "songs": [],
+      "performance": "2027-07-03T22:00:00"
+    }
+  ],
+  "organizer": { "name": "Eifel Events", "website": null },
+  "ageRestriction": null,
+  "description": null,
+  "website": "https://example.com/eifel-open-air",
+  "socials": { "instagram": null, "facebook": null, "tiktok": null },
+  "extraInfo": ["Camping inklusive"]
 }
 
-### Party anlegen
+###
+# @name createTour
+POST {{Backend_HostAddress}}/api/events
+Content-Type: application/json
+
+{
+  "name": "Testers Herbsttour 2026",
+  "type": "TOUR",
+  "status": null,
+  "dates": [
+    {
+      "start": "2026-10-16T20:00:00",
+      "end": null,
+      "doorsOpen": "2026-10-16T19:00:00",
+      "location": { "venue": "Live Music Hall", "street": "Lichtstraße", "houseNumber": "30", "postalCode": "50825", "city": "Köln", "district": "Ehrenfeld", "region": "Köln", "state": "Nordrhein-Westfalen", "country": "DE" },
+      "tickets": { "price": 25, "currency": "EUR", "presale": true, "url": null }
+    },
+    {
+      "start": "2026-10-18T21:00:00",
+      "end": null,
+      "doorsOpen": "2026-10-18T20:00:00",
+      "location": { "venue": "Jazzhaus Freiburg", "street": "Schnewlinstraße", "houseNumber": "1", "postalCode": "79098", "city": "Freiburg", "district": "Altstadt", "region": "Südbaden", "state": "Baden-Württemberg", "country": "DE" },
+      "tickets": { "price": 28, "currency": "EUR", "presale": false, "url": null }
+    }
+  ],
+  "artists": [
+    {
+      "name": "The Testers",
+      "genres": ["Rock"],
+      "members": [],
+      "songs": [],
+      "performance": null
+    }
+  ],
+  "organizer": { "name": "Konzertbüro Köln", "website": null },
+  "ageRestriction": null,
+  "description": null,
+  "website": null,
+  "socials": { "instagram": null, "facebook": null, "tiktok": null },
+  "extraInfo": []
+}
+
+###
 # @name createParty
 POST {{Backend_HostAddress}}/api/events
 Content-Type: application/json
 
 {
-  "startDate": "2026-12-31",
-  "startTime": "21:00",
-  "entryTime": "20:30",
-  "price": 15,
-  "priceType": "Abendkasse",
-  "eventType": "Party",
-  "location": {
-    "postalCode": "50667",
-    "street": "Domplatz",
-    "houseNumber": "1",
-    "city": "Köln",
-    "district": "Innenstadt",
-    "region": "Köln",
-    "state": "Nordrhein-Westfalen",
-    "eventLocationName": "Live Music Hall"
-  },
-  "party": {
-    "endDate": "2027-01-01",
-    "endTime": "05:00",
-    "organizer": "Nachtschicht e.V.",
-    "partyName": "Silvester Bash",
-    "bands": [
-      {
-        "name": "DJ Crew",
-        "musicians": [ { "artistName": "DJ Null" } ],
-        "genres": [ "Techno" ]
-      }
-    ]
-  }
+  "name": "Silvester Bash",
+  "type": "PARTY",
+  "dates": [
+    {
+      "start": "2026-12-31T21:00:00",
+      "end": "2027-01-01T05:00:00",
+      "doorsOpen": "2026-12-31T20:30:00",
+      "location": { "venue": "Live Music Hall", "street": "Lichtstraße", "houseNumber": "30", "postalCode": "50825", "city": "Köln", "district": "Ehrenfeld", "region": "Köln", "state": "Nordrhein-Westfalen", "country": "DE" },
+      "tickets": { "price": 15, "currency": "EUR", "presale": false, "url": null }
+    }
+  ],
+  "artists": [
+    { "name": "DJ Crew", "genres": ["Techno"], "members": [], "songs": [], "performance": null }
+  ],
+  "organizer": { "name": "Nachtschicht e.V.", "website": null }
 }
 
-### Alle Events abrufen
-GET {{Backend_HostAddress}}/api/events
-Accept: application/json
-
-### Ein Event abrufen
-GET {{Backend_HostAddress}}/api/events/{{createConcert.response.body.guid}}
-Accept: application/json
-
-### Event ändern (Konzert wird zur Party)
-PUT {{Backend_HostAddress}}/api/events/{{createConcert.response.body.guid}}
-Content-Type: application/json
-
-{
-  "startDate": "2026-11-21",
-  "startTime": "22:00",
-  "entryTime": "21:00",
-  "price": 12,
-  "priceType": "Abendkasse",
-  "eventType": "Party",
-  "location": {
-    "postalCode": "50667",
-    "street": "Domplatz",
-    "houseNumber": "1",
-    "city": "Köln",
-    "district": "Innenstadt",
-    "region": "Köln",
-    "state": "Nordrhein-Westfalen",
-    "eventLocationName": "Live Music Hall"
-  },
-  "party": {
-    "endDate": "2026-11-22",
-    "endTime": "04:00",
-    "organizer": "Konzertbüro Köln",
-    "partyName": "Testers Aftershow",
-    "bands": [
-      {
-        "name": "The Testers",
-        "musicians": [ { "artistName": "Ricky Riff" } ]
-      }
-    ]
-  }
-}
-
-### Status ändern
-PATCH {{Backend_HostAddress}}/api/events/{{createConcert.response.body.guid}}/status
-Content-Type: application/json
-
-{
-  "status": "Abgesagt"
-}
-
-### Event löschen
-DELETE {{Backend_HostAddress}}/api/events/{{createConcert.response.body.guid}}
-
-### Fehlerfall: Konzert ohne Konzert-Daten (400)
+###
 POST {{Backend_HostAddress}}/api/events
 Content-Type: application/json
 
 {
-  "startDate": "2026-11-14",
-  "startTime": "20:00",
-  "entryTime": "19:00",
-  "price": 10,
-  "priceType": "Vorverkauf",
-  "eventType": "Konzert",
-  "location": {
-    "postalCode": "50667",
-    "street": "Domplatz",
-    "houseNumber": "1",
-    "city": "Köln",
-    "district": "Innenstadt",
-    "region": "Köln",
-    "state": "Nordrhein-Westfalen",
-    "eventLocationName": "Live Music Hall"
-  }
+  "name": "Flyer mit Lücken",
+  "type": null,
+  "dates": [
+    { "start": "2026-09-05", "end": null, "doorsOpen": null, "location": { "venue": null, "street": null, "houseNumber": null, "postalCode": null, "city": "Kandern", "district": null, "region": null, "state": null, "country": null }, "tickets": null }
+  ],
+  "artists": [ { "name": null, "genres": [], "members": [], "songs": [], "performance": null } ],
+  "organizer": null,
+  "ageRestriction": null,
+  "description": null,
+  "website": null,
+  "socials": null,
+  "extraInfo": null
 }
 
-### Fehlerfall: unbekannte Id (404)
+###
+GET {{Backend_HostAddress}}/api/events
+Accept: application/json
+
+###
+GET {{createConcert.response.headers.Location}}
+Accept: application/json
+
+###
+PUT {{createConcert.response.headers.Location}}
+Content-Type: application/json
+
+{
+  "name": "The Testers – Doppelkonzert",
+  "type": null,
+  "dates": [
+    { "start": "2026-11-14T20:00:00", "location": { "venue": "Live Music Hall", "city": "Köln" }, "tickets": { "price": 29.9, "currency": "EUR", "presale": true, "url": null } },
+    { "start": "2026-11-15T20:00:00", "location": { "venue": "Live Music Hall", "city": "Köln" }, "tickets": { "price": 29.9, "currency": "EUR", "presale": true, "url": null } }
+  ],
+  "artists": [ { "name": "The Testers", "genres": ["Rock"], "members": [], "songs": [], "performance": null } ]
+}
+
+###
+PATCH {{createConcert.response.headers.Location}}/status
+Content-Type: application/json
+
+{
+  "status": "SOLD_OUT"
+}
+
+###
+DELETE {{createConcert.response.headers.Location}}
+
+###
+POST {{Backend_HostAddress}}/api/events
+Content-Type: application/json
+
+{
+  "name": null,
+  "dates": [ { "start": null } ]
+}
+
+###
 GET {{Backend_HostAddress}}/api/events/00000000-0000-0000-0000-00000000abcd

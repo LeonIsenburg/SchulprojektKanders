@@ -9,7 +9,6 @@ interface EventVariant {
   endTime?: string | null
 }
 
-/** Konzert, Party oder Festival – je nachdem, welche Variante gefüllt ist. */
 export function variantOf(event: EventDetail): EventVariant | null {
   return event.festival ?? event.party ?? event.concert ?? null
 }
@@ -30,7 +29,6 @@ export function endTimeOf(event: EventDetail): string | null {
   return variantOf(event)?.endTime ?? null
 }
 
-/** Festival-/Partyname, bei Konzerten der Headliner, sonst die Location. */
 export function titleOf(event: EventDetail): string {
   return (
     event.festival?.festivalName ??
@@ -41,7 +39,6 @@ export function titleOf(event: EventDetail): string {
   )
 }
 
-/** „Nordwind · Fräulein Gold +2“ */
 export function lineupOf(event: EventDetail, max = 3): string {
   const names = bandsOf(event).map((slot) => slot.band.name)
   if (!names.length) return EMPTY
@@ -49,10 +46,6 @@ export function lineupOf(event: EventDetail, max = 3): string {
   return names.length > max ? `${shown} +${names.length - max}` : shown
 }
 
-/**
- * Unterzeile für Listen. Bei Konzerten ist der Headliner schon der Titel –
- * dann die Support-Acts („mit …“) bzw. die Besetzung statt eines doppelten Namens.
- */
 export function subtitleOf(event: EventDetail): string {
   const title = titleOf(event)
   const bands = bandsOf(event)
@@ -82,7 +75,6 @@ export function postalCityOf(event: EventDetail): string {
   return parts.length ? parts.join(' ') : EMPTY
 }
 
-/** Plakat-Datum: „10. Juli 2026“ bzw. „10.–12. Juli 2026“ bei mehrtägigen Events. */
 export function posterDate(event: EventDetail): string {
   const start = toDate(event.startDate)
   if (!start) return EMPTY
@@ -149,7 +141,6 @@ export function musicianName(musician: Musician): string {
   return musician.artistName ?? (realName || EMPTY)
 }
 
-/** Alle Genres der Acts, ohne Duplikate. */
 export function genresOf(event: EventDetail): string[] {
   return [...new Set(bandsOf(event).flatMap((slot) => slot.band.genres ?? []))]
 }
@@ -174,7 +165,6 @@ export function monthShort(value: string | null | undefined): string {
   return date ? date.toLocaleDateString('de-DE', { month: 'short' }).replace('.', '') : EMPTY
 }
 
-/** Gruppierungs-Schlüssel „2026-10“ plus Anzeigename „Oktober 2026“. */
 export function monthOf(value: string | null | undefined): { key: string; label: string } {
   const date = toDate(value)
   if (!date) return { key: 'ohne-datum', label: 'Ohne Datum' }
@@ -184,8 +174,6 @@ export function monthOf(value: string | null | undefined): { key: string; label:
   }
 }
 
-// ---------- Zeitbezug zu heute ----------
-
 const DAY_MS = 86_400_000
 const relativeFormat = new Intl.RelativeTimeFormat('de-DE', { numeric: 'auto' })
 
@@ -194,7 +182,6 @@ export function startOfToday(): Date {
   return new Date(now.getFullYear(), now.getMonth(), now.getDate())
 }
 
-/** Ganze Tage bis zum Datum (negativ = vergangen). */
 export function daysUntil(value: string | null | undefined, today: Date): number | null {
   const date = toDate(value)
   return date ? Math.round((date.getTime() - today.getTime()) / DAY_MS) : null
@@ -205,13 +192,11 @@ export function isPast(event: EventDetail, today: Date): boolean {
   return days !== null && days < 0
 }
 
-/** Mehrtägiges Event, das schon vor heute begonnen hat und noch nicht vorbei ist. */
 export function isRunning(event: EventDetail, today: Date): boolean {
   const start = daysUntil(event.startDate, today)
   return start !== null && start < 0 && !isPast(event, today)
 }
 
-/** „heute“, „morgen“, „in 3 Wochen“, „vor 2 Monaten“ … */
 export function relativeLabel(event: EventDetail, today: Date): string {
   if (isRunning(event, today)) return 'läuft gerade'
   const days = daysUntil(event.startDate, today)
@@ -222,7 +207,6 @@ export function relativeLabel(event: EventDetail, today: Date): string {
   return relativeFormat.format(Math.round(days / 30), 'month')
 }
 
-/** Großer Countdown für das nächste Event: Zahl + Einheit. */
 export function countdownOf(event: EventDetail, today: Date): { value: string; unit: string } {
   if (isRunning(event, today)) return { value: 'Jetzt', unit: 'läuft gerade' }
   const days = daysUntil(event.startDate, today)
