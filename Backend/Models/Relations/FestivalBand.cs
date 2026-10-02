@@ -14,6 +14,9 @@ public class FestivalBand : BaseEntity
     public required Guid BandId {get; set;}
     public Band Band {get; set;} = null!;
 
+    // Reihenfolge wie im Request, damit GET die Listen in derselben Reihenfolge liefert
+    public int Position {get; set;}
+
     public DateOnly? Date {get; set;}
 
     public TimeOnly? Time {get; set;}

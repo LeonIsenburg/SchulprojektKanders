@@ -23,10 +23,18 @@
 aspire run
 ```
 
-oder in VS Code die Startkonfiguration **„Aspire: AppHost (Backend + Frontend + DB)“** wählen (F5).
-Dafür wird die Extension `microsoft-aspire.aspire-vscode` benötigt.
+oder in VS Code mit **F5** und der Startkonfiguration **„Aspire (Backend + Frontend + DB)“**.
+Das Dashboard öffnet sich dann automatisch im Browser.
+Breakpoints im Backend: während Aspire läuft zusätzlich **„Aspire: an Backend anhängen“** starten
+und den Prozess `Backend.exe` auswählen.
 
-Das Aspire-Dashboard öffnet sich im Browser. Dort siehst du alle Ressourcen, ihre URLs, Logs und Traces:
+Wichtig:
+- Vorher eine laufende Backend-Debug-Session beenden (sonst ist Port 5284 belegt und `Backend.dll` gesperrt).
+- Das Dashboard nur über den Link **mit `?t=...`** aus dem Terminal öffnen – das ist der Login-Token.
+  Ohne Token landet man auf der Login-Seite.
+- Beenden mit `Strg+C` bzw. `aspire stop`.
+
+Im Dashboard siehst du alle Ressourcen, ihre URLs, Logs und Traces:
 
 - `appdb` – SQLite-Datenbank (`Backend/app.db`)
 - `backend` – Web API

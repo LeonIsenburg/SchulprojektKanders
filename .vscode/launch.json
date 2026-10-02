@@ -2,13 +2,40 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Aspire: AppHost (Backend + Frontend + DB)",
-      "type": "aspire",
+      // Startet Backend, Frontend und DB über Aspire und öffnet das Dashboard (inkl. Login-Token)
+      "name": "Aspire (Backend + Frontend + DB)",
+      "type": "coreclr",
       "request": "launch",
-      "program": "${workspaceFolder}/AppHost/AppHost.csproj"
+      "preLaunchTask": "build-apphost",
+      "program": "${workspaceFolder}/AppHost/bin/Debug/net10.0/AppHost.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}/AppHost",
+      "stopAtEntry": false,
+      "console": "integratedTerminal",
+      // entspricht dem "https"-Profil aus AppHost/Properties/launchSettings.json
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "DOTNET_ENVIRONMENT": "Development",
+        "DOTNET_LAUNCH_PROFILE": "https",
+        "ASPNETCORE_URLS": "https://localhost:17169;http://localhost:15146",
+        "ASPIRE_DASHBOARD_OTLP_ENDPOINT_URL": "https://localhost:21196",
+        "ASPIRE_RESOURCE_SERVICE_ENDPOINT_URL": "https://localhost:22294"
+      },
+      "serverReadyAction": {
+        "action": "openExternally",
+        "pattern": "Login to the dashboard at (https?://\\S+)",
+        "uriFormat": "%s"
+      }
     },
     {
-      "name": "Backend (http://localhost:5284)",
+      // Während Aspire läuft: an das Backend anhängen, damit Breakpoints im Backend greifen
+      "name": "Aspire: an Backend anhängen",
+      "type": "coreclr",
+      "request": "attach",
+      "processId": "${command:pickProcess}"
+    },
+    {
+      "name": "Nur Backend, ohne Aspire (http://localhost:5284)",
       "type": "coreclr",
       "request": "launch",
       "preLaunchTask": "build-backend",

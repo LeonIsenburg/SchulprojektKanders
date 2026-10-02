@@ -9,44 +9,39 @@ public static class EventMapper
     {
         return new EventResponse
         {
-            Guid = e.Guid,
             StartDate = e.StartDate,
             StartTime = e.StartTime,
-            StartDay = e.StartDay,
             EntryTime = e.EntryTime,
             Price = e.Price,
             PriceType = e.PriceType,
             EventType = e.EventType,
-            Status = e.Status,
             Location = e.ValidLocation.ToResponse(),
             Concert = e.Concert is null ? null : new ConcertResponse
             {
                 Organizer = e.Concert.Organizer,
-                Bands = e.Concert.Bands.Select(cb => cb.Band.ToResponse()).ToList()
+                Bands = e.Concert.Bands.OrderBy(cb => cb.Position).Select(cb => cb.Band.ToResponse()).ToList()
+            },
+            Party = e.Party is null ? null : new PartyResponse
+            {
+                EndDate = e.Party.EndDate,
+                EndTime = e.Party.EndTime,
+                Organizer = e.Party.Organizer,
+                PartyName = e.Party.PartyName.Name,
+                Bands = e.Party.Bands.OrderBy(pb => pb.Position).Select(pb => pb.Band.ToResponse()).ToList()
             },
             Festival = e.Festival is null ? null : new FestivalResponse
             {
                 EndDate = e.Festival.EndDate,
                 EndTime = e.Festival.EndTime,
-                EndDay = e.Festival.EndDay,
                 Organizer = e.Festival.Organizer,
                 FestivalName = e.Festival.FestivalName.Name,
-                Bands = e.Festival.Bands.Select(fb => new BandPerformanceResponse
+                Bands = e.Festival.Bands.OrderBy(fb => fb.Position).Select(fb => new BandPerformanceResponse
                 {
                     Band = fb.Band.ToResponse(),
                     Date = fb.Date,
                     Time = fb.Time,
                     Day = fb.Day
                 }).ToList()
-            },
-            Party = e.Party is null ? null : new PartyResponse
-            {
-                EndDate = e.Party.EndDate,
-                EndTime = e.Party.EndTime,
-                EndDay = e.Party.EndDay,
-                Organizer = e.Party.Organizer,
-                PartyName = e.Party.PartyName.Name,
-                Bands = e.Party.Bands.Select(pb => pb.Band.ToResponse()).ToList()
             }
         };
     }
@@ -68,17 +63,28 @@ public static class EventMapper
 
     private static BandResponse ToResponse(this Band band)
     {
+        var genres = band.MusicGenres.OrderBy(bg => bg.Position).Select(bg => bg.MusicGenre.Description).ToList();
+        var songs = band.Songs.OrderBy(bs => bs.Position).Select(bs => bs.Song.Name).ToList();
+
         return new BandResponse
         {
             Name = band.Name,
-            Musicians = band.Musicians.Select(bm => new MusicianResponse
-            {
-                ArtistName = bm.Musician.ArtistName,
-                FirstName = bm.Musician.FirstName,
-                LastName = bm.Musician.LastName
-            }).ToList(),
-            Genres = band.MusicGenres.Select(bg => bg.MusicGenre.Description).ToList(),
-            Songs = band.Songs.Select(bs => bs.Song.Name).ToList()
+            Musicians = band.Musicians.OrderBy(bm => bm.Position).Select(bm => bm.Musician.ToResponse()).ToList(),
+            // leere Listen wie im Request als null ausgeben
+            Genres = genres.Count > 0 ? genres : null,
+            Songs = songs.Count > 0 ? songs : null
+        };
+    }
+
+    private static MusicianResponse ToResponse(this Musician musician)
+    {
+        // Beim Anlegen wird ein fehlender Vor-/Nachname mit dem Künstlernamen gefüllt
+        // (siehe RequestRepository) – das hier wieder als null ausgeben
+        return new MusicianResponse
+        {
+            ArtistName = musician.ArtistName,
+            FirstName = musician.FirstName == musician.ArtistName ? null : musician.FirstName,
+            LastName = musician.LastName == musician.ArtistName ? null : musician.LastName
         };
     }
 }

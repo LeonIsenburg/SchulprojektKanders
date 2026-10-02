@@ -27,15 +27,5 @@
     "C:\\Users\\LeonIsenburg\\.nuget\\packages\\polly.extensions\\8.4.2\\polly.extensions.8.4.2.nupkg.sha512",
     "C:\\Users\\LeonIsenburg\\.nuget\\packages\\polly.ratelimiting\\8.4.2\\polly.ratelimiting.8.4.2.nupkg.sha512"
   ],
-  "logs": [
-    {
-      "code": "NU1900",
-      "level": "Warning",
-      "message": "Fehler beim Abrufen von Paketsicherheitsrisikodaten: Der Dienstindex für die Quelle \"https://api.nuget.org/v3/index.json\" konnte nicht geladen werden.",
-      "projectPath": "C:\\Projekte\\SchulprojektKanders\\ServiceDefaults\\ServiceDefaults.csproj",
-      "warningLevel": 1,
-      "filePath": "C:\\Projekte\\SchulprojektKanders\\ServiceDefaults\\ServiceDefaults.csproj",
-      "targetGraphs": []
-    }
-  ]
+  "logs": []
 }

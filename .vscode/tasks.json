@@ -18,6 +18,31 @@
       }
     },
     {
+      "label": "build-apphost",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "build",
+        "${workspaceFolder}/AppHost/AppHost.csproj",
+        "/property:GenerateFullPaths=true",
+        "/consoleloggerparameters:NoSummary"
+      ],
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "aspire-run",
+      "detail": "Startet Backend, Frontend und DB über Aspire (Dashboard-Link mit Login-Token erscheint im Terminal)",
+      "command": "aspire",
+      "type": "process",
+      "args": [
+        "run",
+        "--apphost",
+        "${workspaceFolder}/AppHost/AppHost.csproj"
+      ],
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
       "label": "watch-backend",
       "command": "dotnet",
       "type": "process",

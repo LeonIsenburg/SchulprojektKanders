@@ -44,6 +44,9 @@ using (var scope = app.Services.CreateScope())
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+
+    // Swagger-UI unter /swagger, liest das von MapOpenApi erzeugte Dokument
+    app.UseSwaggerUI(options => options.SwaggerEndpoint("/openapi/v1.json", "Backend v1"));
 }
 
 app.UseHttpsRedirection();

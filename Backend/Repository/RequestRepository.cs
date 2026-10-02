@@ -183,13 +183,14 @@ namespace Backend.Repository
             };
             context.Concert.Add(concert);
 
-            foreach (var band in bands)
+            for (var i = 0; i < bands.Count; i++)
             {
                 context.ConcertBand.Add(new ConcertBand
                 {
                     Guid = Guid.NewGuid(),
                     ConcertId = concert.Guid,
-                    BandId = band.Guid
+                    BandId = bands[i].Guid,
+                    Position = i
                 });
             }
         }
@@ -225,6 +226,7 @@ namespace Backend.Repository
                     Guid = Guid.NewGuid(),
                     FestivalId = festival.Guid,
                     BandId = band.Guid,
+                    Position = addedBandIds.Count - 1,
                     Date = performance.Date,
                     Time = performance.Time,
                     Day = performance.Day
@@ -262,7 +264,8 @@ namespace Backend.Repository
                 {
                     Guid = Guid.NewGuid(),
                     PartyId = party.Guid,
-                    BandId = band.Guid
+                    BandId = band.Guid,
+                    Position = addedBandIds.Count - 1
                 });
             }
         }
@@ -275,7 +278,7 @@ namespace Backend.Repository
             if (request.Musicians.Count == 0)
                 throw new ArgumentException($"Band '{request.Name}' braucht mindestens einen Musiker.");
 
-            foreach (var musicianRequest in request.Musicians)
+            foreach (var (position, musicianRequest) in request.Musicians.Index())
             {
                 var musician = await GetOrCreateAsync(context.Musician, m => m.ArtistName == musicianRequest.ArtistName,
                     () => new Musician
@@ -295,12 +298,13 @@ namespace Backend.Repository
                     {
                         Guid = Guid.NewGuid(),
                         BandId = band.Guid,
-                        MusicianId = musician.Guid
+                        MusicianId = musician.Guid,
+                        Position = position
                     });
                 }
             }
 
-            foreach (var genreDescription in request.Genres ?? [])
+            foreach (var (position, genreDescription) in (request.Genres ?? []).Index())
             {
                 var genre = await GetOrCreateAsync(context.MusicGenre, g => g.Description == genreDescription,
                     () => new MusicGenre { Guid = Guid.NewGuid(), MusicGenreID = 0, Description = genreDescription });
@@ -313,12 +317,13 @@ namespace Backend.Repository
                     {
                         Guid = Guid.NewGuid(),
                         BandId = band.Guid,
-                        MusicGenreId = genre.Guid
+                        MusicGenreId = genre.Guid,
+                        Position = position
                     });
                 }
             }
 
-            foreach (var songName in request.Songs ?? [])
+            foreach (var (position, songName) in (request.Songs ?? []).Index())
             {
                 var song = await GetOrCreateAsync(context.Song, s => s.Name == songName,
                     () => new Song { Guid = Guid.NewGuid(), SongID = 0, Name = songName });
@@ -331,7 +336,8 @@ namespace Backend.Repository
                     {
                         Guid = Guid.NewGuid(),
                         BandId = band.Guid,
-                        SongId = song.Guid
+                        SongId = song.Guid,
+                        Position = position
                     });
                 }
             }

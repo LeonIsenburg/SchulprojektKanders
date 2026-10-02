@@ -24,6 +24,8 @@ export default defineConfig({
       '/api': {
         target: process.env.BACKEND_URL ?? 'http://localhost:5284',
         changeOrigin: true,
+        // lokales .NET-Entwicklerzertifikat akzeptieren
+        secure: false,
       },
     },
   },

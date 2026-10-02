@@ -12,4 +12,7 @@ public class BandMusician : BaseEntity
 
     public required Guid MusicianId {get; set;}
     public Musician Musician {get; set;} = null!;
+
+    // Reihenfolge wie im Request, damit GET die Listen in derselben Reihenfolge liefert
+    public int Position {get; set;}
 }

@@ -8,7 +8,9 @@ builder.AddDockerComposeEnvironment("compose")
 
 var backend = builder.AddProject<Projects.Backend>("backend")
     .WithExternalHttpEndpoints()
-    .WithHttpHealthCheck("/health");
+    .WithHttpHealthCheck("/health")
+    // Swagger-Link im Dashboard
+    .WithUrlForEndpoint("https", _ => new() { Url = "/swagger", DisplayText = "Swagger" });
 
 if (builder.ExecutionContext.IsRunMode)
 {
@@ -35,7 +37,8 @@ else
 #pragma warning disable ASPIREJAVASCRIPT001 // PublishAsStaticWebsite ist in Aspire 13.5 noch experimentell
 builder.AddViteApp("frontend", "../Frontend")
     .WithReference(backend)
-    .WithEnvironment("BACKEND_URL", backend.GetEndpoint("http"))
+    // https, weil das Backend http-Aufrufe per UseHttpsRedirection umleitet
+    .WithEnvironment("BACKEND_URL", backend.GetEndpoint("https"))
     .WaitFor(backend)
     .WithExternalHttpEndpoints()
     // Docker: gebaute Dateien per YARP ausliefern und /api an das Backend weiterleiten
